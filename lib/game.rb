@@ -10,12 +10,16 @@
 #  -could also store info in diagonal arrays (12 total)
 
 class Game
-  
-end
-
-class Player
-  attr_accessor :player
+  attr_accessor :over
   def initialize
-    @player = 'player'
+    @over = false
   end
+  def over?
+    @over
+  end
+  def end_game
+    @over = true
+  end
+  
+  
 end
