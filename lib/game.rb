@@ -7,12 +7,14 @@
 #  -store and continuously update horizontal and vertical arrays
 #  -check for horizontal arrays (6)
 #  -check for vertical with arrays (7)
-#  -could also store info in diagonal arrays (12 total)
-
+#  -could also store info in diagonal arrays (12 diagonal arrays with possible connect 4s)
+require_relative 'player'
 class Game
-  attr_accessor :over
+  attr_accessor :over, :player1, :player2
   def initialize
     @over = false
+    @player1 = nil
+    @player2 = nil
   end
   def over?
     @over
@@ -20,6 +22,19 @@ class Game
   def end_game
     @over = true
   end
-  
-  
+  def begin_game
+    puts "Welcome to Connect Four"
+    @player1 = Player.new("Player 1")
+    @player2 = Player.new("Player 2")
+  end
+  def game_loop
+    begin_game
+    until over?
+      puts 'hi'
+      end_game
+    end
+  end
 end
+
+new_game = Game.new
+new_game.game_loop
