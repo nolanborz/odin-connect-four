@@ -16,7 +16,7 @@ describe Board do
       expect(board.columns_arr[2].nil?).to be true
     end
   end
-  it "updates arrays when a column is called"
+  
 
       
 

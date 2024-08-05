@@ -10,12 +10,12 @@ describe Game do
       expect(game.over?).to be false
     end
   end
-  describe "#end_game" do
-    it "turns @over to true when end game is called" do
+  describe "#game_loop" do
+    it "calls end_game and sets over to true" do
       game = Game.new
-      game.end_game
+      expect(game.over?).to be false
+      game.game_loop
       expect(game.over?).to be true
-      
     end
   end
 end
