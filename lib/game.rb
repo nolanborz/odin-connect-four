@@ -32,10 +32,17 @@ class Game
   end
   def game_loop
     begin_game
-    until over?
-      puts 'hi'
-      end_game
+    current_player = @player1
+    loop do
+      num = current_player.input
+      puts num
+      # Add game logic here (e.g., make a move, check for win/draw)
+      
+      break if over?  # You'll need to implement this method
+      
+      current_player = (current_player == @player1) ? @player2 : @player1
     end
+    end_game
   end
 end
 
