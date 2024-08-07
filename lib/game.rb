@@ -34,13 +34,20 @@ class Game
     begin_game
     current_player = @player1
     loop do
-      num = current_player.input
-      puts num
-      # Add game logic here (e.g., make a move, check for win/draw)
-      
-      break if over?  # You'll need to implement this method
-      
-      current_player = (current_player == @player1) ? @player2 : @player1
+      column = current_player.input - 1  # Adjust for 0-based indexing
+      if @board.valid_move?(column)
+        @board.place_piece(column, current_player.name)
+        if @board.win_detector(current_player.name)
+          puts "#{current_player.name} wins!"
+          break
+        elsif @board.board.all? { |col| col.all? }
+          puts "It's a draw!"
+          break
+        end
+        current_player = (current_player == @player1) ? @player2 : @player1
+      else
+        puts "Invalid move. Try again."
+      end
     end
     end_game
   end

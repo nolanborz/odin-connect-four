@@ -25,4 +25,8 @@ class Board
   def valid_move?(column)
     column.between?(0, 6) && !column_full?(column)
   end
+
+  def win_detector(last_piece_placed)
+    
+  end
 end
