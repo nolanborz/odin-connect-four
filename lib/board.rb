@@ -1,12 +1,28 @@
 class Board 
-  attr_accessor :rows_arr, :columns_arr
+  attr_accessor :board
 
   def initialize
-    @rows_arr = Array.new(6)
-    @columns_arr = Array.new(7)
+    @board = Array.new(7) { Array.new(6) }
   end
 
-  def insert_piece(column, symbol)
-    
+  def place_piece(column, piece)
+    row = first_empty_row(column)
+    @board[column][row] = piece if row
+  end
+
+  def get_piece(column, row)
+    @board[column][row]
+  end
+
+  def column_full?(column)
+    @board[column].all?
+  end
+
+  def first_empty_row(column)
+    @board[column].rindex(nil)
+  end
+
+  def valid_move?(column)
+    column.between?(0, 6) && !column_full?(column)
   end
 end
