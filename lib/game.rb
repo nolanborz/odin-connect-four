@@ -26,25 +26,24 @@ class Game
   end
   def begin_game
     puts "Welcome to Connect Four"
-    @player1 = Player.new("Player 1")
-    @player2 = Player.new("Player 2")
+    @player1 = Player.new("Player 1", "O")
+    @player2 = Player.new("Player 2", "X")
     @board = Board.new
   end
   def game_loop
     begin_game
     current_player = @player1
     loop do
-      column = current_player.input - 1  # Adjust for 0-based indexing
+      column = current_player.input
       if @board.valid_move?(column)
-        @board.place_piece(column, current_player.name)
-        if @board.win_detector(current_player.name)
-          puts "#{current_player.name} wins!"
-          break
-        elsif @board.board.all? { |col| col.all? }
-          puts "It's a draw!"
-          break
+        @board.place_piece(column, current_player.piece)
+        @board.draw_board  # Call draw_board on the board object
+        # ... rest of your game logic ...
+        if current_player == @player1
+          current_player = @player2
+        else
+          current_player = @player1
         end
-        current_player = (current_player == @player1) ? @player2 : @player1
       else
         puts "Invalid move. Try again."
       end

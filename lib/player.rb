@@ -1,7 +1,8 @@
 class Player
-  attr_accessor :name
-  def initialize(name)
+  attr_accessor :name, :piece
+  def initialize(name, piece)
     @name = name
+    @piece = piece
   end
   def input
     loop do

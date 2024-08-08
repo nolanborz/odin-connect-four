@@ -7,6 +7,7 @@ class Board
 
   def place_piece(column, piece)
     row = first_empty_row(column)
+    @last_piece = @board[column][row]
     @board[column][row] = piece if row
   end
 
@@ -26,7 +27,19 @@ class Board
     column.between?(0, 6) && !column_full?(column)
   end
 
-  def win_detector(last_piece_placed)
-    
+  def draw_board
+    puts "\nCurrent board:"
+    #(0..5).reverse_each do |row|
+    (0..5).each do |row|
+
+      line = (0..6).map do |col|
+        piece = get_piece(col, row)
+        piece.nil? ? "." : piece
+      end.join(" ")
+      puts line
+    end
+    puts (0..6).to_a.join(" ")
+    puts
   end
+
 end
