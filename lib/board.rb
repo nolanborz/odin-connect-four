@@ -5,14 +5,10 @@ class Board
     @board = Array.new(7) { Array.new(6) }
   end
 
-  def place_piece(column, piece)
-    row = first_empty_row(column)
-    @last_piece = @board[column][row]
-    @board[column][row] = piece if row
-  end
-
   def get_piece(column, row)
-    @board[column][row]
+    piece = @board[column][row]
+    #puts "Getting piece at column #{column}, row #{row}: #{piece.inspect}"
+    piece
   end
 
   def column_full?(column)
@@ -29,9 +25,7 @@ class Board
 
   def draw_board
     puts "\nCurrent board:"
-    #(0..5).reverse_each do |row|
-    (0..5).each do |row|
-
+    (5.downto(0)).each do |row|
       line = (0..6).map do |col|
         piece = get_piece(col, row)
         piece.nil? ? "." : piece
@@ -42,4 +36,15 @@ class Board
     puts
   end
 
+  def place_piece(column, piece)
+    row = first_empty_row(column)
+    if row
+      @board[column][row] = piece
+      puts "Placed #{piece} at column #{column}, row #{row}"
+      row
+    else
+      puts "Column #{column} is full"
+      nil
+    end
+  end
 end

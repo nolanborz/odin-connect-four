@@ -34,23 +34,136 @@ class Game
     begin_game
     current_player = @player1
     loop do
+      @board.draw_board
+      puts "#{current_player.name}'s turn (#{current_player.piece})"
       column = current_player.input
+  
       if @board.valid_move?(column)
-        @board.place_piece(column, current_player.piece)
-        @board.draw_board  # Call draw_board on the board object
-        # ... rest of your game logic ...
-        if current_player == @player1
-          current_player = @player2
-        else
-          current_player = @player1
+        row = @board.place_piece(column, current_player.piece)
+        
+        if check_win(column, row)
+          @board.draw_board
+          puts "#{current_player.name} wins!"
+          break
+        elsif board_full?
+          @board.draw_board
+          puts "It's a draw!"
+          break
         end
+  
+        current_player = (current_player == @player1) ? @player2 : @player1
       else
         puts "Invalid move. Try again."
       end
     end
     end_game
   end
-end
 
+  def board_full?
+    @board.board.all? { |column| column.all? }
+  end
+
+  def check_win(column, row)
+    piece = @board.get_piece(column, row)
+    
+    puts "Checking win for piece #{piece.inspect} at column #{column}, row #{row}"
+  
+    # Check horizontal
+    return true if check_horizontal(row, piece)
+    
+    # Check vertical
+    return true if check_vertical(column, piece)
+    
+    # Check diagonal (/)
+    return true if check_diagonal_forward(column, row, piece)
+    
+    # Check diagonal (\)
+    return true if check_diagonal_backward(column, row, piece)
+  
+    false
+  end
+  
+  def check_horizontal(row, piece)
+    count = 0
+    (0..6).each do |col|
+      if @board.get_piece(col, row) == piece
+        count += 1
+        return true if count >= 4
+      else
+        count = 0
+      end
+    end
+    false
+  end
+  
+  def check_vertical(column, piece)
+    count = 0
+    (0..5).each do |row|
+      if @board.get_piece(column, row) == piece
+        count += 1
+        return true if count >= 4
+      else
+        count = 0
+      end
+    end
+    false
+  end
+  
+  def check_diagonal_forward(column, row, piece)
+    count = 0
+    (-3..3).each do |i|
+      r = row - i
+      c = column + i
+      if r.between?(0, 5) && c.between?(0, 6)
+        if @board.get_piece(c, r) == piece
+          count += 1
+          return true if count >= 4
+        else
+          count = 0
+        end
+      end
+    end
+    false
+  end
+  
+  def check_diagonal_backward(column, row, piece)
+    count = 0
+    (-3..3).each do |i|
+      r = row + i
+      c = column + i
+      if r.between?(0, 5) && c.between?(0, 6)
+        if @board.get_piece(c, r) == piece
+          count += 1
+          return true if count >= 4
+        else
+          count = 0
+        end
+      end
+    end
+    false
+  end
+  
+  def check_direction(row, col, row_dir, col_dir, piece)
+    count = 0
+    (-3..3).each do |i|
+      r = row + i * row_dir
+      c = col + i * col_dir
+      if r.between?(0, 5) && c.between?(0, 6)
+        current_piece = @board.get_piece(c, r)
+        puts "Checking position (#{c}, #{r}): #{current_piece.inspect}"
+        if current_piece == piece
+          count += 1
+          puts "Match found. Count: #{count}"
+          return true if count >= 4
+        else
+          count = 0
+        end
+      else
+        break  # Stop checking if we're out of bounds
+      end
+    end
+    false
+  end
+end
 new_game = Game.new
 new_game.game_loop
