@@ -1,21 +1,40 @@
+# game_spec.rb
 require_relative '../lib/game'
 
-describe Game do
-  it "creates a new instance of game" do
-    expect(Game.new).to be_a(Game)
-  end
-  describe "#initialize" do
-    it "initializes game object and sets 'over?' to false" do
-      game = Game.new
-      expect(game.over?).to be false
+RSpec.describe Game do
+  let(:game) { Game.new }
+
+  describe '#check_horizontal' do
+    before do
+      game.begin_game
     end
-  end
-  describe "#game_loop" do
-    it "calls end_game and sets over to true" do
-      game = Game.new
-      expect(game.over?).to be false
-      game.game_loop
-      expect(game.over?).to be true
+
+    it 'detects a horizontal win' do
+      # Simulate a horizontal win
+      4.times { |i| game.instance_variable_get(:@board).place_piece(i, 'O') }
+
+      expect(game.check_horizontal(0, 'O')).to be true
+    end
+
+    it 'does not detect a win with less than 4 in a row' do
+      # Place 3 pieces in a row
+      3.times { |i| game.instance_variable_get(:@board).place_piece(i, 'O') }
+
+      expect(game.check_horizontal(0, 'O')).to be false
+    end
+
+    it 'does not detect a win with 4 non-consecutive pieces' do
+      # Place 4 non-consecutive pieces
+      [0, 1, 3, 5].each { |i| game.instance_variable_get(:@board).place_piece(i, 'O') }
+
+      expect(game.check_horizontal(0, 'O')).to be false
+    end
+
+    it 'detects a win in the middle of the row' do
+      # Place a winning combination in the middle
+      [2, 3, 4, 5].each { |i| game.instance_variable_get(:@board).place_piece(i, 'X') }
+
+      expect(game.check_horizontal(0, 'X')).to be true
     end
   end
 end
